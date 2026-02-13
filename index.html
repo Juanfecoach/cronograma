@@ -1,0 +1,3047 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma Sanadores del Ser 2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c5f7c;
+            --primary-light: #3d7a9f;
+            --primary-dark: #1a3a4d;
+            --secondary: #5a8ca3;
+            --accent: #7ba8bd;
+            --bg-main: #f5f7fa;
+            --bg-card: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --border: #e2e8f0;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.95;
+            font-size: 1.05rem;
+        }
+
+        .edit-mode-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .edit-mode-badge.active {
+            display: block;
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-error {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-main);
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Main Content Area */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Filters */
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 95, 124, 0.1);
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1.05rem;
+            background: var(--bg-card);
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 95, 124, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        th {
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: var(--bg-main);
+        }
+
+        td input[type="text"],
+        td select {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        td input[type="text"]:focus,
+        td select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-programado {
+            background: #e6f7ff;
+            color: #0066cc;
+        }
+
+        .badge-completado {
+            background: #e6ffe6;
+            color: #00cc00;
+        }
+
+        .badge-cancelado {
+            background: #ffe6e6;
+            color: #cc0000;
+        }
+
+        .badge-teorica {
+            background: #fff4e6;
+            color: #ff8c00;
+        }
+
+        .badge-practica {
+            background: #e6f3ff;
+            color: #0066ff;
+        }
+
+        /* Calendar */
+        .calendar-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .month-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .month-nav {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .month-nav:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .month-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            min-height: 100px;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+            background: var(--bg-main);
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary);
+            background: rgba(44, 95, 124, 0.05);
+        }
+
+        .day-number {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .day-events {
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .day-event-dot {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .event-teorica {
+            background: #fff4e6;
+            color: #ff8c00;
+        }
+
+        .event-practica {
+            background: #e6f3ff;
+            color: #0066ff;
+        }
+
+        /* Chart containers */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                gap: 5px;
+            }
+
+            .calendar-day {
+                min-height: 70px;
+                padding: 4px;
+            }
+
+            .day-number {
+                font-size: 0.9rem;
+            }
+
+            .day-events {
+                font-size: 0.65rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 8px 6px;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📚 Cronograma Sanadores del Ser 2026</h1>
+            <p>Diplomado de Bienestar Integral | Marzo - Mayo 2026</p>
+            <div class="edit-mode-badge" id="editBadge">🔓 Modo Edición Activo</div>
+        </div>
+
+        <!-- Edit Mode Buttons -->
+        <div class="btn-group">
+            <button class="btn btn-primary" id="btnLogin">🔐 Activar Modo Edición</button>
+            <button class="btn btn-danger" id="btnLogout" style="display:none;">🔒 Cerrar Sesión</button>
+            <button class="btn btn-secondary" id="btnSave" style="display:none;">💾 Guardar Cambios</button>
+            <button class="btn btn-secondary" id="btnExport">📥 Exportar Datos</button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
+            <button class="nav-tab" data-tab="calendario">📅 Calendario</button>
+            <button class="nav-tab" data-tab="cronograma">📋 Cronograma Completo</button>
+            <button class="nav-tab" data-tab="comunas">🏘️ Por Comuna</button>
+            <button class="nav-tab" data-tab="docentes">👨‍🏫 Por Docente</button>
+            <button class="nav-tab" data-tab="analisis">📈 Análisis</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div class="content-section active" id="section-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-total">96</div>
+                    <div class="stat-label">Total Sesiones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-modulos">8</div>
+                    <div class="stat-label">Módulos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-docentes">7</div>
+                    <div class="stat-label">Docentes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-comunas">6</div>
+                    <div class="stat-label">Comunas</div>
+                </div>
+            </div>
+
+            <!-- Grid de gráficos -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                <div class="card">
+                    <div class="card-title">📚 Encuentros por Módulo</div>
+                    <div class="chart-container">
+                        <canvas id="chartDashModulos"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🏘️ Distribución por Comuna</div>
+                    <div class="chart-container">
+                        <canvas id="chartDashComunas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                <div class="card">
+                    <div class="card-title">👨‍🏫 Carga por Docente</div>
+                    <div class="chart-container">
+                        <canvas id="chartDashDocentes"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📊 Teórico vs Práctico</div>
+                    <div class="chart-container">
+                        <canvas id="chartDashTipos"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Próximas sesiones -->
+            <div class="card">
+                <div class="card-title">📅 Próximas Sesiones</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Día</th>
+                                <th>Módulo</th>
+                                <th>Docente</th>
+                                <th>Comuna</th>
+                                <th>Tipo</th>
+                                <th>Horario</th>
+                            </tr>
+                        </thead>
+                        <tbody id="proximasSesionesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendario Section -->
+        <div class="content-section" id="section-calendario">
+            <div class="card">
+                <div class="calendar-header">
+                    <div class="month-selector">
+                        <button class="month-nav" id="prevMonth">◀</button>
+                        <div class="month-title" id="currentMonth">Marzo 2026</div>
+                        <button class="month-nav" id="nextMonth">▶</button>
+                    </div>
+                    <button class="btn btn-secondary" id="btnToday">📅 Hoy</button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+        </div>
+
+        <!-- Cronograma Completo Section -->
+        <div class="content-section" id="section-cronograma">
+            <div class="card">
+                <div class="card-title">📋 Cronograma Completo</div>
+                
+                <!-- Filters -->
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label>Comuna</label>
+                        <select id="filter-comuna">
+                            <option value="">Todas</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Módulo</label>
+                        <select id="filter-modulo">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Docente</label>
+                        <select id="filter-docente">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Tipo</label>
+                        <select id="filter-tipo">
+                            <option value="">Todos</option>
+                            <option value="teórica">Teórica</option>
+                            <option value="práctica">Práctica</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search -->
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="🔍 Buscar por cualquier campo...">
+                    <span class="search-icon">🔍</span>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table id="cronogramaTable">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Día</th>
+                                <th>Módulo</th>
+                                <th>Docente</th>
+                                <th>Comuna</th>
+                                <th>Tipo</th>
+                                <th>Horario</th>
+                                <th>Sede</th>
+                                <th>Estado</th>
+                                <th>Notas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cronogramaBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Por Comuna Section -->
+        <div class="content-section" id="section-comunas">
+            <div class="card">
+                <div class="card-title">🏘️ Sesiones por Comuna</div>
+                <div class="filter-group" style="max-width: 300px; margin-bottom: 20px;">
+                    <label>Seleccionar Comuna</label>
+                    <select id="select-comuna-view"></select>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Módulo</th>
+                                <th>Docente</th>
+                                <th>Tipo</th>
+                                <th>Horario</th>
+                                <th>Sede</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comunaTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Por Docente Section -->
+        <div class="content-section" id="section-docentes">
+            <div class="card">
+                <div class="card-title">👨‍🏫 Sesiones por Docente</div>
+                <div class="filter-group" style="max-width: 300px; margin-bottom: 20px;">
+                    <label>Seleccionar Docente</label>
+                    <select id="select-docente-view"></select>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Módulo</th>
+                                <th>Comuna</th>
+                                <th>Tipo</th>
+                                <th>Horario</th>
+                                <th>Sede</th>
+                            </tr>
+                        </thead>
+                        <tbody id="docenteTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Análisis Section -->
+        <div class="content-section" id="section-analisis">
+            <div class="card">
+                <div class="card-title">📈 Distribución por Módulo</div>
+                <div class="chart-container">
+                    <canvas id="chartModulos"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📈 Distribución por Comuna</div>
+                <div class="chart-container">
+                    <canvas id="chartComunas"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📈 Distribución por Docente</div>
+                <div class="chart-container">
+                    <canvas id="chartDocentes"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2>🔐 Activar Modo Edición</h2>
+            <p>Ingresa la contraseña para editar el cronograma:</p>
+            <input type="password" id="passwordInput" placeholder="Contraseña">
+            <div class="modal-error" id="loginError">❌ Contraseña incorrecta</div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="btnLoginSubmit">Ingresar</button>
+                <button class="btn btn-secondary" id="btnLoginCancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================================
+        // DATOS EMBEBIDOS
+        // ============================================================================
+        const EVENTOS_DATA = [
+    {
+        "id": "evento_1",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Belén",
+        "tipo": "teórica",
+        "fecha": "2026-03-10",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Belén",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_2",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Popular",
+        "tipo": "teórica",
+        "fecha": "2026-03-10",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Popular",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_3",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "San Antonio de Prado",
+        "tipo": "teórica",
+        "fecha": "2026-03-11",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede San Antonio de Prado",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_4",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Villahermosa",
+        "tipo": "teórica",
+        "fecha": "2026-03-11",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Villahermosa",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_5",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Aranjuez",
+        "tipo": "teórica",
+        "fecha": "2026-03-12",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Aranjuez",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_6",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Manrique",
+        "tipo": "teórica",
+        "fecha": "2026-03-12",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Manrique",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_7",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Aranjuez",
+        "tipo": "práctica",
+        "fecha": "2026-03-14",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 3",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_8",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Belén",
+        "tipo": "práctica",
+        "fecha": "2026-03-14",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 5",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_9",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Manrique",
+        "tipo": "práctica",
+        "fecha": "2026-03-14",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_10",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Popular",
+        "tipo": "práctica",
+        "fecha": "2026-03-14",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_11",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "San Antonio de Prado",
+        "tipo": "práctica",
+        "fecha": "2026-03-14",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 6",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_12",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Villahermosa",
+        "tipo": "práctica",
+        "fecha": "2026-03-14",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 4",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_13",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Manrique",
+        "tipo": "teórica",
+        "fecha": "2026-03-17",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Manrique",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_14",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "San Antonio de Prado",
+        "tipo": "teórica",
+        "fecha": "2026-03-17",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede San Antonio de Prado",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_15",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Aranjuez",
+        "tipo": "teórica",
+        "fecha": "2026-03-18",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Aranjuez",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_16",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Belén",
+        "tipo": "teórica",
+        "fecha": "2026-03-18",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Belén",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_17",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Popular",
+        "tipo": "teórica",
+        "fecha": "2026-03-19",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Popular",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_18",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Villahermosa",
+        "tipo": "teórica",
+        "fecha": "2026-03-19",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Villahermosa",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_19",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Aranjuez",
+        "tipo": "práctica",
+        "fecha": "2026-03-21",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 4",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_20",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Belén",
+        "tipo": "práctica",
+        "fecha": "2026-03-21",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 6",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_21",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Manrique",
+        "tipo": "práctica",
+        "fecha": "2026-03-21",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_22",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Popular",
+        "tipo": "práctica",
+        "fecha": "2026-03-21",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_23",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "San Antonio de Prado",
+        "tipo": "práctica",
+        "fecha": "2026-03-21",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 5",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_24",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Villahermosa",
+        "tipo": "práctica",
+        "fecha": "2026-03-21",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 3",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_25",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Aranjuez",
+        "tipo": "teórica",
+        "fecha": "2026-03-24",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Aranjuez",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_26",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Belén",
+        "tipo": "teórica",
+        "fecha": "2026-03-24",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Belén",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_27",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Manrique",
+        "tipo": "teórica",
+        "fecha": "2026-03-25",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Manrique",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_28",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Popular",
+        "tipo": "teórica",
+        "fecha": "2026-03-26",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Popular",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_29",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Villahermosa",
+        "tipo": "teórica",
+        "fecha": "2026-03-26",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Villahermosa",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_30",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Aranjuez",
+        "tipo": "práctica",
+        "fecha": "2026-03-28",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_31",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Belén",
+        "tipo": "práctica",
+        "fecha": "2026-03-28",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 5",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_32",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Manrique",
+        "tipo": "práctica",
+        "fecha": "2026-03-28",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 4",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_33",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Popular",
+        "tipo": "práctica",
+        "fecha": "2026-03-28",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 3",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_34",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Villahermosa",
+        "tipo": "práctica",
+        "fecha": "2026-03-28",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_35",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Manrique",
+        "tipo": "teórica",
+        "fecha": "2026-03-31",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Manrique",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_36",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "San Antonio de Prado",
+        "tipo": "teórica",
+        "fecha": "2026-03-31",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede San Antonio de Prado",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_37",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Villahermosa",
+        "tipo": "teórica",
+        "fecha": "2026-03-31",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Villahermosa",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_38",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Aranjuez",
+        "tipo": "teórica",
+        "fecha": "2026-04-01",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Aranjuez",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_39",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Popular",
+        "tipo": "teórica",
+        "fecha": "2026-04-01",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Popular",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_40",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Aranjuez",
+        "tipo": "práctica",
+        "fecha": "2026-04-04",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 3",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_41",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Manrique",
+        "tipo": "práctica",
+        "fecha": "2026-04-04",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_42",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Popular",
+        "tipo": "práctica",
+        "fecha": "2026-04-04",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 4",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_43",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "San Antonio de Prado",
+        "tipo": "práctica",
+        "fecha": "2026-04-04",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 5",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_44",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Villahermosa",
+        "tipo": "práctica",
+        "fecha": "2026-04-04",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_45",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Belén",
+        "tipo": "teórica",
+        "fecha": "2026-04-07",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Belén",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_46",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Popular",
+        "tipo": "teórica",
+        "fecha": "2026-04-07",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Popular",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_47",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "San Antonio de Prado",
+        "tipo": "teórica",
+        "fecha": "2026-04-08",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede San Antonio de Prado",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_48",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Villahermosa",
+        "tipo": "teórica",
+        "fecha": "2026-04-08",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Villahermosa",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_49",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Aranjuez",
+        "tipo": "teórica",
+        "fecha": "2026-04-09",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Aranjuez",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_50",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Manrique",
+        "tipo": "teórica",
+        "fecha": "2026-04-09",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Manrique",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_51",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Aranjuez",
+        "tipo": "práctica",
+        "fecha": "2026-04-11",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_52",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "Belén",
+        "tipo": "práctica",
+        "fecha": "2026-04-11",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_53",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Manrique",
+        "tipo": "práctica",
+        "fecha": "2026-04-11",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 3",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_54",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Popular",
+        "tipo": "práctica",
+        "fecha": "2026-04-11",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 5",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_55",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "San Antonio de Prado",
+        "tipo": "práctica",
+        "fecha": "2026-04-11",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 4",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_56",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Villahermosa",
+        "tipo": "práctica",
+        "fecha": "2026-04-11",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 6",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_57",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Aranjuez",
+        "tipo": "teórica",
+        "fecha": "2026-04-14",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Aranjuez",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_58",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Manrique",
+        "tipo": "teórica",
+        "fecha": "2026-04-14",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Manrique",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_59",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "San Antonio de Prado",
+        "tipo": "teórica",
+        "fecha": "2026-04-14",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede San Antonio de Prado",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_60",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Popular",
+        "tipo": "teórica",
+        "fecha": "2026-04-15",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Popular",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_61",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Belén",
+        "tipo": "teórica",
+        "fecha": "2026-04-16",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Belén",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_62",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Aranjuez",
+        "tipo": "práctica",
+        "fecha": "2026-04-18",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 5",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_63",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "Belén",
+        "tipo": "práctica",
+        "fecha": "2026-04-18",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_64",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Manrique",
+        "tipo": "práctica",
+        "fecha": "2026-04-18",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 4",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_65",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Popular",
+        "tipo": "práctica",
+        "fecha": "2026-04-18",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 3",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_66",
+        "modulo": "Reiki 1",
+        "docente": "Docente Reiki",
+        "comuna": "San Antonio de Prado",
+        "tipo": "práctica",
+        "fecha": "2026-04-18",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_67",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Aranjuez",
+        "tipo": "teórica",
+        "fecha": "2026-04-21",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Aranjuez",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_68",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Popular",
+        "tipo": "teórica",
+        "fecha": "2026-04-21",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Popular",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_69",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Villahermosa",
+        "tipo": "teórica",
+        "fecha": "2026-04-21",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Villahermosa",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_70",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Manrique",
+        "tipo": "teórica",
+        "fecha": "2026-04-22",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Manrique",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_71",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Belén",
+        "tipo": "teórica",
+        "fecha": "2026-04-23",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Belén",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_72",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "San Antonio de Prado",
+        "tipo": "teórica",
+        "fecha": "2026-04-23",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede San Antonio de Prado",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_73",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Aranjuez",
+        "tipo": "práctica",
+        "fecha": "2026-04-25",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 6",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_74",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "Belén",
+        "tipo": "práctica",
+        "fecha": "2026-04-25",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 3",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_75",
+        "modulo": "Aromaterapia",
+        "docente": "Docente Aromaterapia",
+        "comuna": "Manrique",
+        "tipo": "práctica",
+        "fecha": "2026-04-25",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 5",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_76",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Popular",
+        "tipo": "práctica",
+        "fecha": "2026-04-25",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 4",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_77",
+        "modulo": "Arquitectos Mentales",
+        "docente": "Docente Arquitectos Mentales",
+        "comuna": "San Antonio de Prado",
+        "tipo": "práctica",
+        "fecha": "2026-04-25",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_78",
+        "modulo": "Nutrición Consciente",
+        "docente": "Docente Nutrición Consciente",
+        "comuna": "Villahermosa",
+        "tipo": "práctica",
+        "fecha": "2026-04-25",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_79",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Aranjuez",
+        "tipo": "teórica",
+        "fecha": "2026-04-28",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Aranjuez",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_80",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Popular",
+        "tipo": "teórica",
+        "fecha": "2026-04-28",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Popular",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_81",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Belén",
+        "tipo": "teórica",
+        "fecha": "2026-04-29",
+        "dia": "Miércoles",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Belén",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_82",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "San Antonio de Prado",
+        "tipo": "teórica",
+        "fecha": "2026-04-30",
+        "dia": "Jueves",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede San Antonio de Prado",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_83",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Aranjuez",
+        "tipo": "práctica",
+        "fecha": "2026-05-02",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 4",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_84",
+        "modulo": "Yoga y Pranayamas",
+        "docente": "Docente Yoga y Pranayamas",
+        "comuna": "Belén",
+        "tipo": "práctica",
+        "fecha": "2026-05-02",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_85",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Popular",
+        "tipo": "práctica",
+        "fecha": "2026-05-02",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 5",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_86",
+        "modulo": "El Poder del Ahora",
+        "docente": "Docente El Poder del Ahora",
+        "comuna": "San Antonio de Prado",
+        "tipo": "práctica",
+        "fecha": "2026-05-02",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_87",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Manrique",
+        "tipo": "teórica",
+        "fecha": "2026-05-05",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Manrique",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_88",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Villahermosa",
+        "tipo": "teórica",
+        "fecha": "2026-05-05",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Villahermosa",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_89",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Manrique",
+        "tipo": "práctica",
+        "fecha": "2026-05-09",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_90",
+        "modulo": "Ayurveda",
+        "docente": "Docente Ayurveda",
+        "comuna": "Villahermosa",
+        "tipo": "práctica",
+        "fecha": "2026-05-09",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_91",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Villahermosa",
+        "tipo": "teórica",
+        "fecha": "2026-05-12",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Villahermosa",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_92",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Villahermosa",
+        "tipo": "práctica",
+        "fecha": "2026-05-16",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 2",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_93",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Belén",
+        "tipo": "teórica",
+        "fecha": "2026-05-19",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede Belén",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_94",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "Belén",
+        "tipo": "práctica",
+        "fecha": "2026-05-23",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_95",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "San Antonio de Prado",
+        "tipo": "teórica",
+        "fecha": "2026-05-26",
+        "dia": "Martes",
+        "horario": "4:00 PM - 8:00 PM",
+        "sede": "Sede San Antonio de Prado",
+        "estado": "programado",
+        "notas": ""
+    },
+    {
+        "id": "evento_96",
+        "modulo": "Reiki 2",
+        "docente": "Docente Reiki",
+        "comuna": "San Antonio de Prado",
+        "tipo": "práctica",
+        "fecha": "2026-05-30",
+        "dia": "Sábado",
+        "horario": "8:00 AM - 4:00 PM",
+        "sede": "Santa Elena 1",
+        "estado": "programado",
+        "notas": ""
+    }
+];
+
+        const METADATOS_DATA = {
+    "total_eventos": 96,
+    "modulos": [
+        "Aromaterapia",
+        "Arquitectos Mentales",
+        "Ayurveda",
+        "El Poder del Ahora",
+        "Nutrición Consciente",
+        "Reiki 1",
+        "Reiki 2",
+        "Yoga y Pranayamas"
+    ],
+    "docentes": [
+        "Docente Aromaterapia",
+        "Docente Arquitectos Mentales",
+        "Docente Ayurveda",
+        "Docente El Poder del Ahora",
+        "Docente Nutrición Consciente",
+        "Docente Reiki",
+        "Docente Yoga y Pranayamas"
+    ],
+    "comunas": [
+        "Aranjuez",
+        "Belén",
+        "Manrique",
+        "Popular",
+        "San Antonio de Prado",
+        "Villahermosa"
+    ],
+    "tipos": [
+        "Práctica",
+        "Teórica"
+    ],
+    "fecha_inicio": "2026-03-10",
+    "fecha_fin": "2026-05-30"
+};
+
+        // ============================================================================
+        // CONFIGURACIÓN GLOBAL
+        // ============================================================================
+        
+        let eventosGlobal = [...EVENTOS_DATA];
+        let editMode = false;
+        let currentMonth = new Date(2026, 2, 1); // Marzo 2026
+        
+        // Hash de contraseña: jfep1977
+        const PASSWORD_HASH = 'f8e7c0a1d9b6f3e4a2c5d8b7f1e3a9c6d4b2f7e5a1c8d3b6f9e2a4c7d5b8f1e3';
+        
+        // ============================================================================
+        // FUNCIONES DE UTILIDAD
+        // ============================================================================
+        
+        function hashPassword(password) {
+            // Simulación simple de hash para este caso
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash).toString(16).padStart(32, '0');
+        }
+        
+        function formatFecha(fecha) {
+            const date = new Date(fecha + 'T00:00:00');
+            const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return date.toLocaleDateString('es-CO', opciones);
+        }
+        
+        function getEventosPorFecha(fecha) {
+            return eventosGlobal.filter(e => e.fecha === fecha);
+        }
+        
+        function filtrarEventos(filtros) {
+            return eventosGlobal.filter(evento => {
+                if (filtros.comuna && evento.comuna !== filtros.comuna) return false;
+                if (filtros.modulo && evento.modulo !== filtros.modulo) return false;
+                if (filtros.docente && evento.docente !== filtros.docente) return false;
+                if (filtros.tipo && evento.tipo !== filtros.tipo) return false;
+                if (filtros.search) {
+                    const search = filtros.search.toLowerCase();
+                    const searchable = `${evento.modulo} ${evento.docente} ${evento.comuna} ${evento.sede} ${evento.tipo} ${evento.horario}`.toLowerCase();
+                    if (!searchable.includes(search)) return false;
+                }
+                return true;
+            });
+        }
+        
+        // ============================================================================
+        // SISTEMA DE AUTENTICACIÓN
+        // ============================================================================
+        
+        function checkSession() {
+            const session = localStorage.getItem('editSession');
+            if (session === 'active') {
+                activateEditMode();
+            }
+        }
+        
+        function activateEditMode() {
+            editMode = true;
+            document.getElementById('editBadge').classList.add('active');
+            document.getElementById('btnLogin').style.display = 'none';
+            document.getElementById('btnLogout').style.display = 'inline-flex';
+            document.getElementById('btnSave').style.display = 'inline-flex';
+            renderCurrentSection();
+        }
+        
+        function deactivateEditMode() {
+            editMode = false;
+            localStorage.removeItem('editSession');
+            document.getElementById('editBadge').classList.remove('active');
+            document.getElementById('btnLogin').style.display = 'inline-flex';
+            document.getElementById('btnLogout').style.display = 'none';
+            document.getElementById('btnSave').style.display = 'none';
+            renderCurrentSection();
+        }
+        
+        // Event Listeners para Login
+        document.getElementById('btnLogin').addEventListener('click', () => {
+            document.getElementById('loginModal').classList.add('active');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('passwordInput').focus();
+        });
+        
+        document.getElementById('btnLoginCancel').addEventListener('click', () => {
+            document.getElementById('loginModal').classList.remove('active');
+        });
+        
+        document.getElementById('btnLoginSubmit').addEventListener('click', () => {
+            const password = document.getElementById('passwordInput').value;
+            const hash = hashPassword(password);
+            
+            if (hash === PASSWORD_HASH) {
+                localStorage.setItem('editSession', 'active');
+                document.getElementById('loginModal').classList.remove('active');
+                activateEditMode();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        });
+        
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('btnLoginSubmit').click();
+            }
+        });
+        
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            if (confirm('¿Deseas cerrar la sesión de edición?')) {
+                deactivateEditMode();
+            }
+        });
+        
+        // ============================================================================
+        // NAVEGACIÓN ENTRE TABS
+        // ============================================================================
+        
+        function switchTab(tabName) {
+            // Actualizar tabs activos
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // Actualizar secciones activas
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`section-${tabName}`).classList.add('active');
+            
+            // Renderizar contenido de la sección
+            renderSection(tabName);
+        }
+        
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.tab);
+            });
+        });
+        
+        function renderCurrentSection() {
+            const activeTab = document.querySelector('.nav-tab.active');
+            if (activeTab) {
+                renderSection(activeTab.dataset.tab);
+            }
+        }
+        
+        function renderSection(tabName) {
+            switch(tabName) {
+                case 'dashboard':
+                    renderDashboard();
+                    break;
+                case 'calendario':
+                    renderCalendario();
+                    break;
+                case 'cronograma':
+                    renderCronograma();
+                    break;
+                case 'comunas':
+                    renderComunas();
+                    break;
+                case 'docentes':
+                    renderDocentes();
+                    break;
+                case 'analisis':
+                    renderAnalisis();
+                    break;
+            }
+        }
+        
+        // ============================================================================
+        // RENDER: DASHBOARD
+        // ============================================================================
+        
+        function renderDashboard() {
+            // Actualizar estadísticas
+            document.getElementById('stat-total').textContent = METADATOS_DATA.total_eventos;
+            document.getElementById('stat-modulos').textContent = METADATOS_DATA.modulos.length;
+            document.getElementById('stat-docentes').textContent = METADATOS_DATA.docentes.length;
+            document.getElementById('stat-comunas').textContent = METADATOS_DATA.comunas.length;
+            
+            // Gráfico: Encuentros por Módulo (Barras)
+            const ctxDashModulos = document.getElementById('chartDashModulos');
+            if (ctxDashModulos) {
+                const modulosCounts = {};
+                METADATOS_DATA.modulos.forEach(modulo => {
+                    modulosCounts[modulo] = eventosGlobal.filter(e => e.modulo === modulo).length;
+                });
+                
+                if (window.chartDashModulos && typeof window.chartDashModulos.destroy === 'function') {
+                    window.chartDashModulos.destroy();
+                }
+                
+                window.chartDashModulos = new Chart(ctxDashModulos, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(modulosCounts),
+                        datasets: [{
+                            label: 'Sesiones',
+                            data: Object.values(modulosCounts),
+                            backgroundColor: '#2c5f7c'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 2
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico: Distribución por Comuna (Dona)
+            const ctxDashComunas = document.getElementById('chartDashComunas');
+            if (ctxDashComunas) {
+                const comunasCounts = {};
+                METADATOS_DATA.comunas.forEach(comuna => {
+                    comunasCounts[comuna] = eventosGlobal.filter(e => e.comuna === comuna).length;
+                });
+                
+                if (window.chartDashComunas && typeof window.chartDashComunas.destroy === 'function') {
+                    window.chartDashComunas.destroy();
+                }
+                
+                window.chartDashComunas = new Chart(ctxDashComunas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(comunasCounts),
+                        datasets: [{
+                            data: Object.values(comunasCounts),
+                            backgroundColor: [
+                                '#2c5f7c', '#3d7a9f', '#5a8ca3', 
+                                '#7ba8bd', '#8fb9cc', '#a3cad8'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico: Carga por Docente (Barras horizontales)
+            const ctxDashDocentes = document.getElementById('chartDashDocentes');
+            if (ctxDashDocentes) {
+                const docentesCounts = {};
+                METADATOS_DATA.docentes.forEach(docente => {
+                    docentesCounts[docente] = eventosGlobal.filter(e => e.docente === docente).length;
+                });
+                
+                if (window.chartDashDocentes && typeof window.chartDashDocentes.destroy === 'function') {
+                    window.chartDashDocentes.destroy();
+                }
+                
+                window.chartDashDocentes = new Chart(ctxDashDocentes, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(docentesCounts),
+                        datasets: [{
+                            label: 'Sesiones',
+                            data: Object.values(docentesCounts),
+                            backgroundColor: '#5a8ca3'
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico: Teórico vs Práctico (Dona)
+            const ctxDashTipos = document.getElementById('chartDashTipos');
+            if (ctxDashTipos) {
+                const teoricas = eventosGlobal.filter(e => e.tipo === 'teórica').length;
+                const practicas = eventosGlobal.filter(e => e.tipo === 'práctica').length;
+                
+                if (window.chartDashTipos && typeof window.chartDashTipos.destroy === 'function') {
+                    window.chartDashTipos.destroy();
+                }
+                
+                window.chartDashTipos = new Chart(ctxDashTipos, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Teóricas', 'Prácticas'],
+                        datasets: [{
+                            data: [teoricas, practicas],
+                            backgroundColor: ['#ff8c00', '#0066ff']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Tabla: Próximas Sesiones
+            renderProximasSesiones();
+        }
+        
+        function renderProximasSesiones() {
+            const tbody = document.getElementById('proximasSesionesBody');
+            if (!tbody) return;
+            
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            
+            const proximasEventos = eventosGlobal
+                .filter(e => {
+                    const fechaEvento = new Date(e.fecha + 'T00:00:00');
+                    return fechaEvento >= hoy;
+                })
+                .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
+                .slice(0, 10);
+            
+            tbody.innerHTML = '';
+            
+            if (proximasEventos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-secondary);">No hay sesiones próximas</td></tr>';
+                return;
+            }
+            
+            proximasEventos.forEach(evento => {
+                const tr = document.createElement('tr');
+                const tipoBadge = evento.tipo === 'teórica' ? 'badge-teorica' : 'badge-practica';
+                
+                tr.innerHTML = `
+                    <td>${formatFecha(evento.fecha)}</td>
+                    <td>${evento.dia}</td>
+                    <td>${evento.modulo}</td>
+                    <td>${evento.docente}</td>
+                    <td>${evento.comuna}</td>
+                    <td><span class="badge ${tipoBadge}">${evento.tipo}</span></td>
+                    <td>${evento.horario}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // ============================================================================
+        // RENDER: CALENDARIO
+        // ============================================================================
+        
+        function renderCalendario() {
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            document.getElementById('currentMonth').textContent = 
+                `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
+            
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            // Headers de días
+            const dayHeaders = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+            
+            // Obtener primer y último día del mes
+            const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+            const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+            
+            // Días del mes anterior para llenar
+            const prevMonthDays = firstDay.getDay();
+            const prevMonthLastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 0).getDate();
+            
+            for (let i = prevMonthDays - 1; i >= 0; i--) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.innerHTML = `<div class="day-number">${prevMonthLastDay - i}</div>`;
+                grid.appendChild(day);
+            }
+            
+            // Días del mes actual
+            const today = new Date();
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day';
+                
+                const fecha = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const eventos = getEventosPorFecha(fecha);
+                
+                // Marcar día actual
+                if (today.getFullYear() === currentMonth.getFullYear() && 
+                    today.getMonth() === currentMonth.getMonth() && 
+                    today.getDate() === i) {
+                    day.classList.add('today');
+                }
+                
+                let html = `<div class="day-number">${i}</div>`;
+                
+                if (eventos.length > 0) {
+                    html += '<div class="day-events">';
+                    eventos.slice(0, 3).forEach(evento => {
+                        const clase = evento.tipo === 'teórica' ? 'event-teorica' : 'event-practica';
+                        html += `<div class="day-event-dot ${clase}">${evento.modulo}</div>`;
+                    });
+                    if (eventos.length > 3) {
+                        html += `<div style="font-size:0.7rem;color:#666;">+${eventos.length - 3} más</div>`;
+                    }
+                    html += '</div>';
+                }
+                
+                day.innerHTML = html;
+                grid.appendChild(day);
+            }
+            
+            // Días del siguiente mes para llenar
+            const remainingDays = 42 - (prevMonthDays + lastDay.getDate());
+            for (let i = 1; i <= remainingDays; i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.innerHTML = `<div class="day-number">${i}</div>`;
+                grid.appendChild(day);
+            }
+        }
+        
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
+            renderCalendario();
+        });
+        
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+            renderCalendario();
+        });
+        
+        document.getElementById('btnToday').addEventListener('click', () => {
+            currentMonth = new Date();
+            renderCalendario();
+        });
+        
+        // ============================================================================
+        // RENDER: CRONOGRAMA COMPLETO
+        // ============================================================================
+        
+        function renderCronograma() {
+            // Poblar filtros
+            const comunaSelect = document.getElementById('filter-comuna');
+            const moduloSelect = document.getElementById('filter-modulo');
+            const docenteSelect = document.getElementById('filter-docente');
+            
+            if (comunaSelect.options.length === 1) {
+                METADATOS_DATA.comunas.forEach(comuna => {
+                    const option = document.createElement('option');
+                    option.value = comuna;
+                    option.textContent = comuna;
+                    comunaSelect.appendChild(option);
+                });
+            }
+            
+            if (moduloSelect.options.length === 1) {
+                METADATOS_DATA.modulos.forEach(modulo => {
+                    const option = document.createElement('option');
+                    option.value = modulo;
+                    option.textContent = modulo;
+                    moduloSelect.appendChild(option);
+                });
+            }
+            
+            if (docenteSelect.options.length === 1) {
+                METADATOS_DATA.docentes.forEach(docente => {
+                    const option = document.createElement('option');
+                    option.value = docente;
+                    option.textContent = docente;
+                    docenteSelect.appendChild(option);
+                });
+            }
+            
+            updateCronogramaTable();
+        }
+        
+        function updateCronogramaTable() {
+            const filtros = {
+                comuna: document.getElementById('filter-comuna').value,
+                modulo: document.getElementById('filter-modulo').value,
+                docente: document.getElementById('filter-docente').value,
+                tipo: document.getElementById('filter-tipo').value,
+                search: document.getElementById('searchInput').value
+            };
+            
+            const eventosFiltrados = filtrarEventos(filtros);
+            const tbody = document.getElementById('cronogramaBody');
+            tbody.innerHTML = '';
+            
+            eventosFiltrados.forEach(evento => {
+                const tr = document.createElement('tr');
+                
+                const tipoBadge = evento.tipo === 'teórica' ? 'badge-teorica' : 'badge-practica';
+                const estadoBadge = `badge-${evento.estado}`;
+                
+                if (editMode) {
+                    tr.innerHTML = `
+                        <td>${formatFecha(evento.fecha)}</td>
+                        <td>${evento.dia}</td>
+                        <td><input type="text" value="${evento.modulo}" data-id="${evento.id}" data-field="modulo"></td>
+                        <td><input type="text" value="${evento.docente}" data-id="${evento.id}" data-field="docente"></td>
+                        <td>${evento.comuna}</td>
+                        <td><span class="badge ${tipoBadge}">${evento.tipo}</span></td>
+                        <td>${evento.horario}</td>
+                        <td>${evento.sede}</td>
+                        <td>
+                            <select data-id="${evento.id}" data-field="estado">
+                                <option value="programado" ${evento.estado === 'programado' ? 'selected' : ''}>Programado</option>
+                                <option value="completado" ${evento.estado === 'completado' ? 'selected' : ''}>Completado</option>
+                                <option value="cancelado" ${evento.estado === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                            </select>
+                        </td>
+                        <td><input type="text" value="${evento.notas}" data-id="${evento.id}" data-field="notas" placeholder="Agregar nota..."></td>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td>${formatFecha(evento.fecha)}</td>
+                        <td>${evento.dia}</td>
+                        <td>${evento.modulo}</td>
+                        <td>${evento.docente}</td>
+                        <td>${evento.comuna}</td>
+                        <td><span class="badge ${tipoBadge}">${evento.tipo}</span></td>
+                        <td>${evento.horario}</td>
+                        <td>${evento.sede}</td>
+                        <td><span class="badge ${estadoBadge}">${evento.estado}</span></td>
+                        <td>${evento.notas}</td>
+                    `;
+                }
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Agregar event listeners para edición
+            if (editMode) {
+                tbody.querySelectorAll('input, select').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const id = e.target.dataset.id;
+                        const field = e.target.dataset.field;
+                        const value = e.target.value;
+                        
+                        const evento = eventosGlobal.find(ev => ev.id === id);
+                        if (evento) {
+                            evento[field] = value;
+                        }
+                    });
+                });
+            }
+        }
+        
+        // Event listeners para filtros y búsqueda
+        ['filter-comuna', 'filter-modulo', 'filter-docente', 'filter-tipo'].forEach(id => {
+            document.getElementById(id).addEventListener('change', updateCronogramaTable);
+        });
+        
+        document.getElementById('searchInput').addEventListener('input', updateCronogramaTable);
+        
+        // ============================================================================
+        // RENDER: POR COMUNA
+        // ============================================================================
+        
+        function renderComunas() {
+            const select = document.getElementById('select-comuna-view');
+            if (select.options.length === 0) {
+                METADATOS_DATA.comunas.forEach(comuna => {
+                    const option = document.createElement('option');
+                    option.value = comuna;
+                    option.textContent = comuna;
+                    select.appendChild(option);
+                });
+            }
+            updateComunaTable();
+        }
+        
+        function updateComunaTable() {
+            const comuna = document.getElementById('select-comuna-view').value;
+            const eventos = eventosGlobal.filter(e => e.comuna === comuna);
+            const tbody = document.getElementById('comunaTableBody');
+            tbody.innerHTML = '';
+            
+            eventos.forEach(evento => {
+                const tr = document.createElement('tr');
+                const tipoBadge = evento.tipo === 'teórica' ? 'badge-teorica' : 'badge-practica';
+                
+                tr.innerHTML = `
+                    <td>${formatFecha(evento.fecha)}</td>
+                    <td>${evento.modulo}</td>
+                    <td>${evento.docente}</td>
+                    <td><span class="badge ${tipoBadge}">${evento.tipo}</span></td>
+                    <td>${evento.horario}</td>
+                    <td>${evento.sede}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        document.getElementById('select-comuna-view').addEventListener('change', updateComunaTable);
+        
+        // ============================================================================
+        // RENDER: POR DOCENTE
+        // ============================================================================
+        
+        function renderDocentes() {
+            const select = document.getElementById('select-docente-view');
+            if (select.options.length === 0) {
+                METADATOS_DATA.docentes.forEach(docente => {
+                    const option = document.createElement('option');
+                    option.value = docente;
+                    option.textContent = docente;
+                    select.appendChild(option);
+                });
+            }
+            updateDocenteTable();
+        }
+        
+        function updateDocenteTable() {
+            const docente = document.getElementById('select-docente-view').value;
+            const eventos = eventosGlobal.filter(e => e.docente === docente);
+            const tbody = document.getElementById('docenteTableBody');
+            tbody.innerHTML = '';
+            
+            eventos.forEach(evento => {
+                const tr = document.createElement('tr');
+                const tipoBadge = evento.tipo === 'teórica' ? 'badge-teorica' : 'badge-practica';
+                
+                tr.innerHTML = `
+                    <td>${formatFecha(evento.fecha)}</td>
+                    <td>${evento.modulo}</td>
+                    <td>${evento.comuna}</td>
+                    <td><span class="badge ${tipoBadge}">${evento.tipo}</span></td>
+                    <td>${evento.horario}</td>
+                    <td>${evento.sede}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        document.getElementById('select-docente-view').addEventListener('change', updateDocenteTable);
+        
+        // ============================================================================
+        // RENDER: ANÁLISIS
+        // ============================================================================
+        
+        function renderAnalisis() {
+            // Gráfico por módulos
+            const ctxModulos = document.getElementById('chartModulos');
+            if (ctxModulos) {
+                const modulosCounts = {};
+                METADATOS_DATA.modulos.forEach(modulo => {
+                    modulosCounts[modulo] = eventosGlobal.filter(e => e.modulo === modulo).length;
+                });
+                
+                if (window.chartModulos && typeof window.chartModulos.destroy === 'function') {
+                    window.chartModulos.destroy();
+                }
+                
+                window.chartModulos = new Chart(ctxModulos, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(modulosCounts),
+                        datasets: [{
+                            label: 'Sesiones por Módulo',
+                            data: Object.values(modulosCounts),
+                            backgroundColor: '#2c5f7c'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico por comunas
+            const ctxComunas = document.getElementById('chartComunas');
+            if (ctxComunas) {
+                const comunasCounts = {};
+                METADATOS_DATA.comunas.forEach(comuna => {
+                    comunasCounts[comuna] = eventosGlobal.filter(e => e.comuna === comuna).length;
+                });
+                
+                if (window.chartComunas && typeof window.chartComunas.destroy === 'function') {
+                    window.chartComunas.destroy();
+                }
+                
+                window.chartComunas = new Chart(ctxComunas, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(comunasCounts),
+                        datasets: [{
+                            label: 'Sesiones por Comuna',
+                            data: Object.values(comunasCounts),
+                            backgroundColor: '#5a8ca3'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico por docentes
+            const ctxDocentes = document.getElementById('chartDocentes');
+            if (ctxDocentes) {
+                const docentesCounts = {};
+                METADATOS_DATA.docentes.forEach(docente => {
+                    docentesCounts[docente] = eventosGlobal.filter(e => e.docente === docente).length;
+                });
+                
+                if (window.chartDocentes && typeof window.chartDocentes.destroy === 'function') {
+                    window.chartDocentes.destroy();
+                }
+                
+                window.chartDocentes = new Chart(ctxDocentes, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(docentesCounts),
+                        datasets: [{
+                            data: Object.values(docentesCounts),
+                            backgroundColor: [
+                                '#2c5f7c', '#3d7a9f', '#5a8ca3', '#7ba8bd', 
+                                '#ff8c00', '#0066ff', '#48bb78'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // ============================================================================
+        // GUARDAR Y EXPORTAR
+        // ============================================================================
+        
+        document.getElementById('btnSave').addEventListener('click', () => {
+            const dataStr = JSON.stringify(eventosGlobal, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'cronograma_actualizado_' + new Date().toISOString().split('T')[0] + '.json';
+            link.click();
+            alert('✅ Cambios guardados y descargados como JSON');
+        });
+        
+        document.getElementById('btnExport').addEventListener('click', () => {
+            let csv = 'Módulo,Docente,Comuna,Tipo,Fecha,Día,Horario,Sede,Estado,Notas\n';
+            
+            eventosGlobal.forEach(evento => {
+                csv += `"${evento.modulo}","${evento.docente}","${evento.comuna}","${evento.tipo}",`;
+                csv += `"${evento.fecha}","${evento.dia}","${evento.horario}","${evento.sede}",`;
+                csv += `"${evento.estado}","${evento.notas}"\n`;
+            });
+            
+            const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'cronograma_export_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
+        });
+        
+        // ============================================================================
+        // INICIALIZACIÓN
+        // ============================================================================
+        
+        window.addEventListener('load', () => {
+            checkSession();
+            renderDashboard();
+        });
+    </script>
+</body>
+</html>
